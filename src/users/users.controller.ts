@@ -20,10 +20,10 @@ export class UsersController {
     @Get()
     @HttpCode(HttpStatus.FOUND)
     getAll() {
-        return this.usersService.getAll;
+        return this.usersService.getAll();
     }
 
-    @Get()
+    @Get(':id')
     @HttpCode(HttpStatus.FOUND)
     getById(@Param('id') id: string) {
         return this.usersService.getById(id);
@@ -35,13 +35,13 @@ export class UsersController {
         return this.usersService.create(createUserDto);
     }
 
-    @Delete()
+    @Delete(':id')
     @HttpCode(HttpStatus.OK)
     remove(@Param('id') id: string) {
         return this.usersService.remove(id);
     }
 
-    @Patch()
+    @Patch(':id')
     @HttpCode(HttpStatus.OK)
     update(@Body() updateUserDto: UpdateUserDto, @Param('id') id: string) {
         return this.usersService.update(id, updateUserDto);
