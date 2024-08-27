@@ -7,11 +7,12 @@ import {
     HttpStatus,
     Param,
     Patch,
-    Post,
+    UseGuards,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UsersService } from './users.service';
+import { JwtAuthGuard } from 'src/guards/jwt-guard';
+import { User } from './schemas/user.schema';
 
 @Controller('users')
 export class UsersController {
@@ -23,27 +24,32 @@ export class UsersController {
         return this.usersService.getAll();
     }
 
-    @Get(':id')
-    @HttpCode(HttpStatus.FOUND)
-    getById(@Param('id') id: string) {
-        return this.usersService.getById(id);
-    }
+    // @Get(':id')
+    // @HttpCode(HttpStatus.FOUND)
+    // getById(@Param('id') id: string) {
+    //     return this.usersService.getById(id);
+    // }
 
-    @Post()
-    @HttpCode(HttpStatus.CREATED)
-    create(@Body() createUserDto: CreateUserDto) {
-        return this.usersService.create(createUserDto);
-    }
+    // @Post()
+    // @HttpCode(HttpStatus.CREATED)
+    // create(@Body() createUserDto: CreateUserDto) {
+    //     return this.usersService.create(createUserDto);
+    // }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     @HttpCode(HttpStatus.OK)
-    remove(@Param('id') id: string) {
+    remove(@Param('id') id: string): Promise<User> {
         return this.usersService.remove(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Patch(':id')
     @HttpCode(HttpStatus.OK)
-    update(@Body() updateUserDto: UpdateUserDto, @Param('id') id: string) {
+    update(
+        @Body() updateUserDto: UpdateUserDto,
+        @Param('id') id: string,
+    ): Promise<User> {
         return this.usersService.update(id, updateUserDto);
     }
 }
